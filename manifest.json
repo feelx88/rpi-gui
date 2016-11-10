@@ -1,0 +1,6 @@
+{
+  "name": "rpi-gui",
+  "short_name": "rpi-gui",
+  "start_url": "/",
+  "display": "standalone"
+}

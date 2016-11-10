@@ -1,0 +1,70 @@
+<link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/google-chart/google-chart.html">
+<link rel="import" href="../../bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<dom-module id="rpi-gui-app">
+  <style>
+  google-chart {
+    width: 100%;
+  }
+  </style>
+  <template>
+    <paper-header-panel>
+      <paper-toolbar>
+         <paper-icon-button icon="menu" on-tap="menuAction"></paper-icon-button>
+      </paper-toolbar>
+    </paper-header-panel>
+
+    <iron-ajax
+      id="req"
+      auto
+      url="/data"
+      handle-as="json"
+      on-response="handleResponse"
+      debounce-duration="300"></iron-ajax>
+
+    <google-chart
+      id='chartTemp'
+      type='line'
+      options='{"title": "Temperatur", "explorer": {}}'
+      cols='[{"label":"Date", "type":"datetime"}, {"label":"°C", "type":"number"}]'>
+    </google-chart>
+    <google-chart
+      id='chartHumid'
+      type='line'
+      options='{"title": "Luftfeuchtigkeit", "explorer": {}}'
+      cols='[{"label":"Date", "type":"datetime"}, {"label":"%RH", "type":"number"}]'>
+    </google-chart>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'rpi-gui-app',
+
+      handleResponse: function(evt) {
+        var data = evt.detail.response,
+            tempData = [],
+            humidData = [];
+
+        for(var x in data) {
+          tempData.push([
+            new Date(data[x].timestamp),
+            data[x].temperature,
+          ]);
+          humidData.push([
+            new Date(data[x].timestamp),
+            data[x].humidity
+          ]);
+        }
+
+        this.$.chartTemp.rows = tempData;
+        this.$.chartHumid.rows = humidData;
+      }
+    });
+  </script>
+</dom-module>

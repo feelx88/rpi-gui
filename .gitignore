@@ -1,0 +1,4 @@
+build/
+bower_components/
+api/node_modules/
+.remote-sync.json
