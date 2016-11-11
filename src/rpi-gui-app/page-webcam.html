@@ -1,0 +1,39 @@
+<link rel="import" href="../../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/google-chart/google-chart.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+
+<dom-module id="page-webcam">
+  <template>
+    <style>
+      :host {
+        width: 100%;
+      }
+      paper-card {
+        width: 100%
+      }
+    </style>
+
+    <!--iron-ajax
+      id="req"
+      auto
+      url="/data"
+      handle-as="json"
+      on-response="handleResponse"
+      debounce-duration="300"></iron-ajax-->
+
+    <paper-card heading="Webcam">
+      <div class="card-content">Some content</div>
+    </paper-card>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'page-webcam',
+
+      handleResponse: function(evt) {
+      }
+    });
+  </script>
+</dom-module>

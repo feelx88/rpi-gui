@@ -9,6 +9,7 @@
 <link rel="import" href="../../bower_components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="page-sensors.html">
+<link rel="import" href="page-webcam.html">
 
 <dom-module id="rpi-gui-app">
   <style>
@@ -28,7 +29,7 @@
 
     <neon-animated-pages selected="{{selected}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
      <page-sensors></page-sensors>
-     <div>Webcam</div>
+     <page-webcam></page-webcam>
     </neon-animated-pages>
 
   </template>
