@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/google-chart/google-chart.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 
 <dom-module id="page-sensors">
   <template>
@@ -14,6 +15,11 @@
       google-chart {
         width: 100%;
       }
+      .flex-center-justified {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+        @apply(--layout-center);
+      }
     </style>
 
     <iron-ajax
@@ -21,16 +27,23 @@
       auto
       url="/data"
       handle-as="json"
+      on-request="handleRequest"
       on-response="handleResponse"
       debounce-duration="300"></iron-ajax>
 
     <paper-card heading="Sensoren">
+      <div class="flex-center-justified">
+        <paper-spinner id="tempSpinner"></paper-spinner>
+      </div>
       <google-chart
         id='chartTemp'
         type='line'
         options='{"title": "Temperatur", "explorer": {}}'
         cols='[{"label":"Date", "type":"datetime"}, {"label":"°C", "type":"number"}]'>
       </google-chart>
+      <div class="flex-center-justified">
+        <paper-spinner id="humidSpinner"></paper-spinner>
+      </div>
       <google-chart
         id='chartHumid'
         type='line'
@@ -43,6 +56,11 @@
   <script>
     Polymer({
       is: 'page-sensors',
+
+      handleRequest: function(evt) {
+        this.$.tempSpinner.active = true;
+        this.$.humidSpinner.active = true;
+      },
 
       handleResponse: function(evt) {
         var data = evt.detail.response,
@@ -62,6 +80,9 @@
 
         this.$.chartTemp.rows = tempData;
         this.$.chartHumid.rows = humidData;
+
+        this.$.tempSpinner.active = false;
+        this.$.humidSpinner.active = false;
       }
     });
   </script>

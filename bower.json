@@ -10,7 +10,9 @@
     "paper-styles": "PolymerElements/paper-styles#^1.1.5",
     "paper-tabs": "PolymerElements/paper-tabs#^1.7.0",
     "iron-pages": "PolymerElements/iron-pages#^1.0.8",
-    "neon-animation": "PolymerElements/neon-animation#^1.2.4"
+    "neon-animation": "PolymerElements/neon-animation#^1.2.4",
+    "paper-spinner": "^1.2.1",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.1"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
