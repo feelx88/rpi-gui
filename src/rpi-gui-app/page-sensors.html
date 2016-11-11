@@ -1,0 +1,63 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/google-chart/google-chart.html">
+
+<dom-module id="page-sensors">
+  <template>
+    <style>
+      :host {
+        width: 100%;
+      }
+      google-chart {
+        width: 100%;
+      }
+    </style>
+
+    <iron-ajax
+      id="req"
+      auto
+      url="/data"
+      handle-as="json"
+      on-response="handleResponse"
+      debounce-duration="300"></iron-ajax>
+
+    <google-chart
+      id='chartTemp'
+      type='line'
+      options='{"title": "Temperatur", "explorer": {}}'
+      cols='[{"label":"Date", "type":"datetime"}, {"label":"°C", "type":"number"}]'>
+    </google-chart>
+    <google-chart
+      id='chartHumid'
+      type='line'
+      options='{"title": "Luftfeuchtigkeit", "explorer": {}}'
+      cols='[{"label":"Date", "type":"datetime"}, {"label":"%RH", "type":"number"}]'>
+    </google-chart>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'page-sensors',
+
+      handleResponse: function(evt) {
+        var data = evt.detail.response,
+            tempData = [],
+            humidData = [];
+
+        for(var x in data) {
+          tempData.push([
+            new Date(data[x].timestamp),
+            data[x].temperature,
+          ]);
+          humidData.push([
+            new Date(data[x].timestamp),
+            data[x].humidity
+          ]);
+        }
+
+        this.$.chartTemp.rows = tempData;
+        this.$.chartHumid.rows = humidData;
+      }
+    });
+  </script>
+</dom-module>
