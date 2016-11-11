@@ -5,7 +5,9 @@
 <link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="page-sensors.html">
 
 <dom-module id="rpi-gui-app">
@@ -24,10 +26,10 @@
       </paper-toolbar>
     </paper-header-panel>
 
-    <iron-pages selected="{{selected}}">
+    <neon-animated-pages selected="{{selected}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
      <page-sensors></page-sensors>
      <div>Webcam</div>
-    </iron-pages>
+    </neon-animated-pages>
 
   </template>
 

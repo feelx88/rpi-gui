@@ -9,7 +9,8 @@
     "iron-ajax": "PolymerElements/iron-ajax#^1.4.3",
     "paper-styles": "PolymerElements/paper-styles#^1.1.5",
     "paper-tabs": "PolymerElements/paper-tabs#^1.7.0",
-    "iron-pages": "PolymerElements/iron-pages#^1.0.8"
+    "iron-pages": "PolymerElements/iron-pages#^1.0.8",
+    "neon-animation": "PolymerElements/neon-animation#^1.2.4"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
