@@ -8,6 +8,9 @@
       :host {
         width: 100%;
       }
+      paper-card {
+        width: 100%
+      }
       google-chart {
         width: 100%;
       }
@@ -21,18 +24,20 @@
       on-response="handleResponse"
       debounce-duration="300"></iron-ajax>
 
-    <google-chart
-      id='chartTemp'
-      type='line'
-      options='{"title": "Temperatur", "explorer": {}}'
-      cols='[{"label":"Date", "type":"datetime"}, {"label":"°C", "type":"number"}]'>
-    </google-chart>
-    <google-chart
-      id='chartHumid'
-      type='line'
-      options='{"title": "Luftfeuchtigkeit", "explorer": {}}'
-      cols='[{"label":"Date", "type":"datetime"}, {"label":"%RH", "type":"number"}]'>
-    </google-chart>
+    <paper-card heading="Sensoren">
+      <google-chart
+        id='chartTemp'
+        type='line'
+        options='{"title": "Temperatur", "explorer": {}}'
+        cols='[{"label":"Date", "type":"datetime"}, {"label":"°C", "type":"number"}]'>
+      </google-chart>
+      <google-chart
+        id='chartHumid'
+        type='line'
+        options='{"title": "Luftfeuchtigkeit", "explorer": {}}'
+        cols='[{"label":"Date", "type":"datetime"}, {"label":"%RH", "type":"number"}]'>
+      </google-chart>
+    </paper-card>
 
   </template>
   <script>
