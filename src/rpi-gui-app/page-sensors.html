@@ -13,16 +13,14 @@
       paper-card {
         width: 100%
       }
-      paper-button {
-        margin-bottom: 1em;
-      }
       google-chart {
         width: 100%;
       }
       .flex-center-justified {
-        @apply(--layout-vertical);
+        @apply(--layout-horizontal);
         @apply(--layout-center-justified);
         @apply(--layout-center);
+        margin-bottom: 1em;
       }
     </style>
 
@@ -38,7 +36,7 @@
     <paper-card heading="Sensoren">
       <div class="flex-center-justified">
         <paper-button  raised onclick="req.generateRequest()">Aktualisieren</paper-button>
-        <paper-spinner id="tempSpinner"></paper-spinner>
+        <paper-spinner id="spinner"></paper-spinner>
       </div>
       <google-chart
         id='chartTemp'
@@ -46,9 +44,6 @@
         options='{"title": "Temperatur", "pointSize": 2, "explorer": {}}'
         cols='[{"label":"Date", "type":"datetime"}, {"label":"°C", "type":"number"}]'>
       </google-chart>
-      <div class="flex-center-justified">
-        <paper-spinner id="humidSpinner"></paper-spinner>
-      </div>
       <google-chart
         id='chartHumid'
         type='line'
@@ -63,8 +58,7 @@
       is: 'page-sensors',
 
       handleRequest: function(evt) {
-        this.$.tempSpinner.active = true;
-        this.$.humidSpinner.active = true;
+        this.$.spinner.active = true;
       },
 
       handleResponse: function(evt) {
@@ -86,8 +80,7 @@
         this.$.chartTemp.rows = tempData;
         this.$.chartHumid.rows = humidData;
 
-        this.$.tempSpinner.active = false;
-        this.$.humidSpinner.active = false;
+        this.$.spinner.active = false;
       }
     });
   </script>
