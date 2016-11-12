@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/google-chart/google-chart.html">
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <dom-module id="page-sensors">
   <template>
@@ -12,11 +13,14 @@
       paper-card {
         width: 100%
       }
+      paper-button {
+        margin-bottom: 1em;
+      }
       google-chart {
         width: 100%;
       }
       .flex-center-justified {
-        @apply(--layout-horizontal);
+        @apply(--layout-vertical);
         @apply(--layout-center-justified);
         @apply(--layout-center);
       }
@@ -33,12 +37,13 @@
 
     <paper-card heading="Sensoren">
       <div class="flex-center-justified">
+        <paper-button  raised onclick="req.generateRequest()">Aktualisieren</paper-button>
         <paper-spinner id="tempSpinner"></paper-spinner>
       </div>
       <google-chart
         id='chartTemp'
         type='line'
-        options='{"title": "Temperatur", "explorer": {}}'
+        options='{"title": "Temperatur", "pointSize": 2, "explorer": {}}'
         cols='[{"label":"Date", "type":"datetime"}, {"label":"°C", "type":"number"}]'>
       </google-chart>
       <div class="flex-center-justified">
@@ -47,7 +52,7 @@
       <google-chart
         id='chartHumid'
         type='line'
-        options='{"title": "Luftfeuchtigkeit", "explorer": {}}'
+        options='{"title": "Luftfeuchtigkeit", "pointSize": 2, "explorer": {}}'
         cols='[{"label":"Date", "type":"datetime"}, {"label":"%RH", "type":"number"}]'>
       </google-chart>
     </paper-card>
