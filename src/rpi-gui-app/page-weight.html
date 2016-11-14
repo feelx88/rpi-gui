@@ -29,7 +29,7 @@
     <iron-ajax
       id="req"
       auto
-      url="/weight"
+      url="/api/weight"
       handle-as="json"
       on-request="handleRequest"
       on-response="handleResponse"
@@ -37,7 +37,7 @@
 
     <iron-ajax
       id="entry"
-      url="/weight/{{weight}}"
+      url="/api/weight/{{weight}}"
       method="PUT"
       handle-as="json"
       on-response="refresh"

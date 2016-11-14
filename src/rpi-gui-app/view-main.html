@@ -10,35 +10,41 @@
 <link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
-<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="view-login.html">
-<link rel="import" href="view-main.html">
+<link rel="import" href="page-sensors.html">
+<link rel="import" href="page-weight.html">
+<link rel="import" href="page-webcam.html">
 
-<dom-module id="rpi-gui-app">
+<dom-module id="view-main">
   <style>
     iron-pages {
       width: 100%;
     }
   </style>
   <template>
-    <app-location route="{{route}}"></app-location>
+      <paper-header-panel>
+        <paper-toolbar>
+          <paper-tabs selected="{{selected}}">
+           <paper-tab>Sensoren</paper-tab>
+           <paper-tab>Gewicht</paper-tab>
+           <paper-tab>Webcam</paper-tab>
+          </paper-tabs>
+        </paper-toolbar>
+      </paper-header-panel>
 
-    <app-route
-        route="{{route}}"
-        pattern="/:view"
-        data="{{routeData}}"
-        tail="{{subroute}}"></app-route>
-
-    <iron-pages selected="[[routeData.view]]" attr-for-selected="name" fallback-selection="main">
-      <view-login name="login"></view-login>
-      <view-main name="main"></view-login>
-    </iron-pages>
-
+      <neon-animated-pages selected="{{selected}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+       <page-sensors></page-sensors>
+       <page-weight></page-weight>
+       <page-webcam></page-webcam>
+      </neon-animated-pages>
   </template>
 
   <script>
     Polymer({
-      is: 'rpi-gui-app'
+      is: 'view-main',
+
+      ready: function() {
+        this.selected = 0;
+      },
     });
   </script>
 </dom-module>

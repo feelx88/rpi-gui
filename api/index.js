@@ -1,10 +1,10 @@
 var express = require('express'),
+    path = require('path'),
     app = express(),
-    MongoClient = require('mongodb').MongoClient;
+    MongoClient = require('mongodb').MongoClient,
+    url = 'mongodb://localhost:27017/home';
 
-var url = 'mongodb://localhost:27017/home';
-
-app.get('/temperatures', function (req, res) {
+app.get('/api/temperatures', function (req, res) {
   // Use connect method to connect to the server
   MongoClient.connect(url, function(err, db) {
     let temp = db.collection('temperatures');
@@ -15,7 +15,7 @@ app.get('/temperatures', function (req, res) {
   });
 });
 
-app.get('/weight', function (req, res) {
+app.get('/api/weight', function (req, res) {
   // Use connect method to connect to the server
   MongoClient.connect(url, function(err, db) {
     let weight = db.collection('weight');
@@ -26,7 +26,7 @@ app.get('/weight', function (req, res) {
   });
 });
 
-app.put('/weight/:weight', function(req, res) {
+app.put('/api/weight/:weight', function(req, res) {
   // Use connect method to connect to the server
   MongoClient.connect(url, function(err, db) {
     let weight = db.collection('weight');
@@ -43,7 +43,12 @@ app.put('/weight/:weight', function(req, res) {
   });
 });
 
-app.use('/', express.static('../'));
+app.use(express.static(path.resolve('../')));
+
+// catchall
+app.use(function(req, res) {
+  res.sendFile(path.resolve('../index.html'));
+});
 
 app.listen(8008, function () {
   console.log('Listening on port 8008');

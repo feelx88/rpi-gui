@@ -1,0 +1,46 @@
+<link rel="import" href="../../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+
+<dom-module id="view-login">
+  <style>
+    iron-pages {
+      width: 100%;
+    }
+    paper-card {
+      padding: 2em;
+    }
+    .flex-center-justified {
+      @apply(--layout-vertical);
+      @apply(--layout-center-justified);
+      @apply(--layout-center);
+      padding-bottom: 1em;
+    }
+  </style>
+  <template>
+    <div class="flex-center-justified">
+      <paper-card heading="Login">
+        <paper-input label="Benutzername" value="{{username}}"></paper-input>
+        <paper-input label="Passwort" type="password" value="{{password}}"></paper-input>
+        <paper-button raised on-click="login">Login</paper-button>
+      </paper-card>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'view-login',
+
+      properties: {
+        username: 'string',
+        password: 'string'
+      },
+
+      login: function() {
+      }
+    });
+  </script>
+</dom-module>
