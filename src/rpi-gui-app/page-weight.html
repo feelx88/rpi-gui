@@ -3,8 +3,10 @@
 <link rel="import" href="../../bower_components/google-chart/google-chart.html">
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 
-<dom-module id="page-sensors">
+<dom-module id="page-weight">
   <template>
     <style>
       :host {
@@ -27,35 +29,41 @@
     <iron-ajax
       id="req"
       auto
-      url="/temperatures"
+      url="/weight"
       handle-as="json"
       on-request="handleRequest"
       on-response="handleResponse"
       debounce-duration="300"></iron-ajax>
 
-    <paper-card heading="Sensoren">
+    <iron-ajax
+      id="entry"
+      url="/weight/{{weight}}"
+      method="PUT"
+      handle-as="json"
+      on-response="refresh"
+      debounce-duration="300"></iron-ajax>
+
+    <paper-card heading="Gewicht" id="container">
+      <div class="flex-center-justified">
+        <paper-input id="input" label="Gewicht" prevent-invalid-input allowed-pattern="[0-9.]" auto-validate pattern="[0-9]+(\.[0-9]+)*" value={{weight}}></paper-input>
+        <paper-button raised on-click="entry">Eintragen</paper-button>
+      </div>
       <div class="flex-center-justified">
         <paper-button  raised on-click="refresh">Aktualisieren</paper-button>
         <paper-spinner id="spinner"></paper-spinner>
       </div>
       <google-chart
-        id='chartTemp'
+        id='chart'
         type='line'
-        options='{"title": "Temperatur", "pointSize": 2, "explorer": {}}'
-        cols='[{"label":"Zeitpunkt", "type":"datetime"}, {"label":"°C", "type":"number"}]'>
-      </google-chart>
-      <google-chart
-        id='chartHumid'
-        type='line'
-        options='{"title": "Luftfeuchtigkeit", "pointSize": 2, "explorer": {}}'
-        cols='[{"label":"Zeitpunkt", "type":"datetime"}, {"label":"%RH", "type":"number"}]'>
+        options='{"title": "Gewicht", "pointSize": 2, "explorer": {}}'
+        cols='[{"label":"Zeitpunkt", "type":"datetime"}, {"label":"g", "type":"number"}]'>
       </google-chart>
     </paper-card>
 
   </template>
   <script>
     Polymer({
-      is: 'page-sensors',
+      is: 'page-weight',
 
       behaviors: [
         Polymer.IronResizableBehavior
@@ -65,9 +73,15 @@
         'iron-resize': '_onIronResize'
       },
 
+      properties: {
+        weight: {
+          type: Number,
+          default: 50
+        }
+      },
+
       _onIronResize: function() {
-        this.$.chartTemp.redraw();
-        this.$.chartHumid.redraw();
+        this.$.chart.redraw();
       },
 
       handleRequest: function(evt) {
@@ -76,26 +90,24 @@
 
       handleResponse: function(evt) {
         var data = evt.detail.response,
-            tempData = [],
-            humidData = [];
+            formattedData = [];
 
-        for(var x in data) {
-          tempData.push([
+        for(x in data) {
+          formattedData.push([
             new Date(data[x].timestamp),
-            data[x].temperature,
-          ]);
-          humidData.push([
-            new Date(data[x].timestamp),
-            data[x].humidity
+            parseFloat(data[x].weight)
           ]);
         }
 
-        this.$.chartTemp.rows = tempData;
-        this.$.chartHumid.rows = humidData;
-
+        this.$.chart.rows = formattedData;
         this.$.spinner.active = false;
       },
 
+      entry: function() {
+        if(this.weight > 0 && !this.$.input.invalid) {
+          this.$.entry.generateRequest();
+        }
+      },
       refresh: function() {
         this.$.req.generateRequest();
       }
