@@ -4,7 +4,8 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     cookieSession = require('cookie-session'),
-    LocalStrategy = require('passport-local').Strategy;
+    LocalStrategy = require('passport-local').Strategy,
+    exec = require('child_process').exec,
     config = require('./config.json'),
     app = express(),
     MongoClient = require('mongodb').MongoClient,
@@ -108,6 +109,11 @@ app.get(['/', '/index.html'], function(req, res) {
   } else {
     return res.sendFile(path.resolve('../index.html'));
   }
+});
+
+app.get('/media_toggle', requireLogin, function(req, res) {
+  exec('mpc toggle');
+  res.send({success: true});
 });
 
 app.use(express.static(path.resolve('../')));
