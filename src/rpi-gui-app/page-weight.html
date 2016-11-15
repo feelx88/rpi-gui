@@ -28,7 +28,6 @@
 
     <iron-ajax
       id="req"
-      auto
       url="/api/weight"
       handle-as="json"
       on-request="handleRequest"
@@ -78,6 +77,11 @@
         weight: {
           type: Number,
           default: 50
+        },
+        active: {
+          type: Boolean,
+          value: false,
+          observer: 'activated'
         }
       },
 
@@ -109,8 +113,15 @@
           this.$.entry.generateRequest();
         }
       },
+
       refresh: function() {
         this.$.req.generateRequest();
+      },
+
+      activated: function(value) {
+        if(value) {
+          this.$.req.generateRequest();
+        }
       }
     });
   </script>

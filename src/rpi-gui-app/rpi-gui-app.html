@@ -29,7 +29,7 @@
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <iron-pages selected="[[routeData.view]]" attr-for-selected="name" fallback-selection="main" on-error="onError">
+    <iron-pages selected="[[routeData.view]]" attr-for-selected="name" selected-attribute="active" fallback-selection="main" on-error="onError">
       <view-login name="login"></view-login>
       <view-main name="main"></view-login>
     </iron-pages>

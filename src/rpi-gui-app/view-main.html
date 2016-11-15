@@ -33,7 +33,7 @@
         </paper-toolbar>
       </paper-header-panel>
 
-      <neon-animated-pages selected="{{selected}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+      <neon-animated-pages selected="{{selected}}" entry-animation="fade-in-animation" selected-attribute="active" exit-animation="fade-out-animation">
        <page-sensors></page-sensors>
        <page-weight></page-weight>
        <page-webcam></page-webcam>
@@ -44,8 +44,21 @@
     Polymer({
       is: 'view-main',
 
-      ready: function() {
-        this.selected = 0;
+      properties: {
+        selected: {
+          default: -1
+        },
+        active: {
+          type: Boolean,
+          value: false,
+          observer: 'activated'
+        }
+      },
+
+      activated: function(value) {
+        if(value) {
+          this.selected = 0;
+        }
       },
 
       logout: function() {

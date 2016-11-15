@@ -26,7 +26,6 @@
 
     <iron-ajax
       id="req"
-      auto
       url="/api/temperatures"
       handle-as="json"
       on-request="handleRequest"
@@ -57,6 +56,14 @@
   <script>
     Polymer({
       is: 'page-sensors',
+
+      properties: {
+        active: {
+          type: Boolean,
+          value: false,
+          observer: 'activated'
+        }
+      },
 
       behaviors: [
         Polymer.IronResizableBehavior
@@ -99,6 +106,12 @@
 
       refresh: function() {
         this.$.req.generateRequest();
+      },
+
+      activated: function(value) {
+        if(value) {
+          this.$.req.generateRequest();
+        }
       }
     });
   </script>
