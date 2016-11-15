@@ -24,14 +24,14 @@
   <template>
       <paper-header-panel>
         <paper-toolbar>
-          <paper-tabs selected="{{selected}}">
-           <paper-tab>Sensoren</paper-tab>
-           <paper-tab>Gewicht</paper-tab>
-           <paper-tab>Webcam</paper-tab>
+          <paper-tabs selected="{{selected}}" class="fit">
+            <paper-button on-click="logout">Logout</paper-button>
+            <paper-tab>Sensoren</paper-tab>
+            <paper-tab>Gewicht</paper-tab>
+            <paper-tab>Webcam</paper-tab>
             <paper-tab>Media</paper-tab>
           </paper-tabs>
           <span class="title"></span>
-          <paper-button on-click="logout">Logout</paper-button>
         </paper-toolbar>
       </paper-header-panel>
 
