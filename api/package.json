@@ -9,7 +9,12 @@
   "author": "",
   "license": "GPL-3.0",
   "dependencies": {
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "cookie-session": "^2.0.0-alpha.2",
     "express": "^4.14.0",
-    "mongodb": "^2.2.11"
+    "mongodb": "^2.2.11",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0"
   }
 }

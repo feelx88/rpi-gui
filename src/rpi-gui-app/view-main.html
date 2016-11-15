@@ -28,6 +28,8 @@
            <paper-tab>Gewicht</paper-tab>
            <paper-tab>Webcam</paper-tab>
           </paper-tabs>
+          <span class="title"></span>
+          <paper-button on-click="logout">Logout</paper-button>
         </paper-toolbar>
       </paper-header-panel>
 
@@ -45,6 +47,10 @@
       ready: function() {
         this.selected = 0;
       },
+
+      logout: function() {
+        location.href = "/logout";
+      }
     });
   </script>
 </dom-module>

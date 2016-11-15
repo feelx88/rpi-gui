@@ -29,7 +29,7 @@
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <iron-pages selected="[[routeData.view]]" attr-for-selected="name" fallback-selection="main">
+    <iron-pages selected="[[routeData.view]]" attr-for-selected="name" fallback-selection="main" on-error="onError">
       <view-login name="login"></view-login>
       <view-main name="main"></view-login>
     </iron-pages>
@@ -38,7 +38,13 @@
 
   <script>
     Polymer({
-      is: 'rpi-gui-app'
+      is: 'rpi-gui-app',
+
+      onError: function(error) {
+        if(window.location.href.indexOf('/login') === -1) {
+          window.location.href = '/login';
+        }
+      }
     });
   </script>
 </dom-module>

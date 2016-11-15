@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <dom-module id="view-login">
   <style>
@@ -13,6 +14,9 @@
     paper-card {
       padding: 2em;
     }
+    paper-button {
+      margin-top: 2em;
+    }
     .flex-center-justified {
       @apply(--layout-vertical);
       @apply(--layout-center-justified);
@@ -21,10 +25,21 @@
     }
   </style>
   <template>
+    <iron-ajax
+      id="req"
+      url="/login"
+      method="post"
+      handle-as="json"
+      on-response="handleResponse"
+      on-error="handleResponse"
+      content-type="application/x-www-form-urlencoded"
+      body='username={{username}}&password={{password}}'
+      debounce-duration="300"></iron-ajax>
+
     <div class="flex-center-justified">
       <paper-card heading="Login">
-        <paper-input label="Benutzername" value="{{username}}"></paper-input>
-        <paper-input label="Passwort" type="password" value="{{password}}"></paper-input>
+        <paper-input label="Benutzername" value="{{username}}" autofocus></paper-input>
+        <paper-input id="password" label="Passwort" type="password" value="{{password}}" on-keydown="keydown"></paper-input>
         <paper-button raised on-click="login">Login</paper-button>
       </paper-card>
     </div>
@@ -39,8 +54,26 @@
         password: 'string'
       },
 
+      handleResponse: function(evt) {
+        var data = evt.detail.response;
+
+        if(!data) {
+          this.$.password.errorMessage = "Wrong password!";
+          this.$.password.invalid = true;
+        } else {
+          location.href = '/';
+        }
+      },
+
       login: function() {
-      }
+        this.$.req.generateRequest();
+      },
+
+      keydown: function (event) {
+            if (event.keyCode === 13) {
+              this.login();
+            }
+        }
     });
   </script>
 </dom-module>

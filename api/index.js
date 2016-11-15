@@ -1,10 +1,69 @@
 var express = require('express'),
     path = require('path'),
+    passport = require('passport'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    cookieSession = require('cookie-session'),
+    LocalStrategy = require('passport-local').Strategy;
+    config = require('./config.json'),
     app = express(),
     MongoClient = require('mongodb').MongoClient,
     url = 'mongodb://localhost:27017/home';
 
-app.get('/api/temperatures', function (req, res) {
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  done(null, {id: id});
+});
+
+passport.use(new LocalStrategy(function(username, password, done) {
+  if(username === config.username && password === config.password) {
+    console.log("logged in!");
+    return done(null, {
+      id: 1,
+      username: username
+    });
+  } else {
+    return done(null, false);
+  }
+}));
+
+app.use(cookieParser());
+app.use(bodyParser());
+app.use(cookieSession({
+  keys: ['12345']
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+function requireLogin(req, res, next) {
+  if(!req.isAuthenticated()) {
+    return res.redirect(401, '/login');
+  } else {
+    return next();
+  }
+}
+
+app.post('/login', passport.authenticate('local', {
+  failureRedirect: '/login/false',
+  successRedirect: '/login/true'
+}));
+
+app.get('/login/:status', function(req, res) {
+  var success = req.params.status === 'true' ? true : false;
+  res.status(success ? 200 : 401).send({
+    success: success
+  });
+});
+
+app.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/login');
+});
+
+app.get('/api/temperatures', requireLogin, function (req, res) {
   // Use connect method to connect to the server
   MongoClient.connect(url, function(err, db) {
     let temp = db.collection('temperatures');
@@ -15,7 +74,7 @@ app.get('/api/temperatures', function (req, res) {
   });
 });
 
-app.get('/api/weight', function (req, res) {
+app.get('/api/weight', requireLogin, function (req, res) {
   // Use connect method to connect to the server
   MongoClient.connect(url, function(err, db) {
     let weight = db.collection('weight');
@@ -26,7 +85,7 @@ app.get('/api/weight', function (req, res) {
   });
 });
 
-app.put('/api/weight/:weight', function(req, res) {
+app.put('/api/weight/:weight', requireLogin, function(req, res) {
   // Use connect method to connect to the server
   MongoClient.connect(url, function(err, db) {
     let weight = db.collection('weight');
@@ -41,6 +100,14 @@ app.put('/api/weight/:weight', function(req, res) {
       db.close();
     });
   });
+});
+
+app.get(['/', '/index.html'], function(req, res) {
+  if(!req.isAuthenticated()) {
+    return res.redirect('/login');
+  } else {
+    return res.sendFile(path.resolve('../index.html'));
+  }
 });
 
 app.use(express.static(path.resolve('../')));
