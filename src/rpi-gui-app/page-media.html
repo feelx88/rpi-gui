@@ -1,0 +1,40 @@
+<link rel="import" href="../../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/google-chart/google-chart.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="page-media">
+  <template>
+    <style>
+      :host {
+        width: 100%;
+      }
+      paper-card {
+        width: 100%;
+        padding-bottom: 1em;
+      }
+    </style>
+
+    <iron-ajax
+      id="toggle"
+      url="/api/media_toggle"
+      handle-as="json"
+      debounce-duration="300"></iron-ajax>
+
+    <paper-card heading="Media">
+      <paper-button raised on-click="toggle">Toggle</paper-button>
+    </paper-card>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'page-media',
+
+      toggle: function() {
+        this.$.toggle.generateRequest();
+      }
+    });
+  </script>
+</dom-module>

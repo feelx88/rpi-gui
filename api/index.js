@@ -103,17 +103,17 @@ app.put('/api/weight/:weight', requireLogin, function(req, res) {
   });
 });
 
+app.get('/api/media_toggle', requireLogin, function(req, res) {
+  exec('mpc toggle');
+  res.send({success: true});
+});
+
 app.get(['/', '/index.html'], function(req, res) {
   if(!req.isAuthenticated()) {
     return res.redirect('/login');
   } else {
     return res.sendFile(path.resolve('../index.html'));
   }
-});
-
-app.get('/media_toggle', requireLogin, function(req, res) {
-  exec('mpc toggle');
-  res.send({success: true});
 });
 
 app.use(express.static(path.resolve('../')));
