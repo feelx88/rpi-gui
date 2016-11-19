@@ -103,8 +103,13 @@ app.put('/api/weight/:weight', requireLogin, function(req, res) {
   });
 });
 
-app.get('/api/media_toggle', requireLogin, function(req, res) {
-  exec('mpc toggle');
+app.get('/api/media/play', requireLogin, function(req, res) {
+  exec('mpc play');
+  res.send({success: true});
+});
+
+app.get('/api/media/pause', requireLogin, function(req, res) {
+  exec('mpc pause');
   res.send({success: true});
 });
 

@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/google-chart/google-chart.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-icons/av-icons.html">
 
 <dom-module id="page-media">
   <template>
@@ -18,13 +19,19 @@
     </style>
 
     <iron-ajax
-      id="toggle"
-      url="/api/media_toggle"
+      id="play"
+      url="/api/media/play"
+      handle-as="json"
+      debounce-duration="300"></iron-ajax>
+    <iron-ajax
+      id="pause"
+      url="/api/media/pause"
       handle-as="json"
       debounce-duration="300"></iron-ajax>
 
     <paper-card heading="Media">
-      <paper-button raised on-click="toggle">Toggle</paper-button>
+      <paper-button raised on-click="play"><iron-icon icon="av:play-arrow"></iron-icon></paper-button>
+      <paper-button raised on-click="pause"><iron-icon icon="av:pause"></iron-icon></paper-button>
     </paper-card>
 
   </template>
@@ -32,8 +39,12 @@
     Polymer({
       is: 'page-media',
 
-      toggle: function() {
-        this.$.toggle.generateRequest();
+      play: function() {
+        this.$.play.generateRequest();
+      },
+
+      pause: function() {
+        this.$.pause.generateRequest();
       }
     });
   </script>
