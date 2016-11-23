@@ -34,7 +34,8 @@ passport.use(new LocalStrategy(function(username, password, done) {
 app.use(cookieParser());
 app.use(bodyParser());
 app.use(cookieSession({
-  keys: ['12345']
+  keys: ['12345'],
+  expires: new Date(new Date(Date.now()).getFullYear() + 10, 0) // 01.01 in 10 years
 }));
 app.use(passport.initialize());
 app.use(passport.session());
