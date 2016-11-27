@@ -109,8 +109,8 @@ app.get('/api/media/play', requireLogin, function(req, res) {
   res.send({success: true});
 });
 
-app.get('/api/media/pause', requireLogin, function(req, res) {
-  exec('mpc pause');
+app.get('/api/media/stop', requireLogin, function(req, res) {
+  exec('mpc stop');
   res.send({success: true});
 });
 
