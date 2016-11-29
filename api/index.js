@@ -114,6 +114,16 @@ app.get('/api/media/stop', requireLogin, function(req, res) {
   res.send({success: true});
 });
 
+app.get('/api/light/0/on', requireLogin, function(req, res) {
+  exec('sudo gpio write 5 1');
+  res.send({success: true});
+});
+
+app.get('/api/light/0/off', requireLogin, function(req, res) {
+  exec('sudo gpio write 5 0');
+  res.send({success: true});
+});
+
 app.get(['/', '/index.html'], function(req, res) {
   if(!req.isAuthenticated()) {
     return res.redirect('/login');
@@ -130,5 +140,7 @@ app.use(function(req, res) {
 });
 
 app.listen(8008, function () {
+  exec('sudo gpio mode 5 output');
+  exec('sudo gpio write 5 0');
   console.log('Listening on port 8008');
 });

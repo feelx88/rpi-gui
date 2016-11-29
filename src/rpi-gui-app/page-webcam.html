@@ -3,6 +3,7 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/google-chart/google-chart.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <dom-module id="page-webcam">
   <template>
@@ -15,24 +16,34 @@
       }
     </style>
 
-    <!--iron-ajax
-      id="req"
-      auto
-      url="/data"
+    <iron-ajax
+      id="light0On"
+      url="/api/light/0/on"
       handle-as="json"
-      on-response="handleResponse"
-      debounce-duration="300"></iron-ajax-->
+      debounce-duration="300"></iron-ajax>
 
-    <paper-card heading="Webcam">
-      <div class="card-content">Some content</div>
-    </paper-card>
+    <iron-ajax
+      id="light0Off"
+      url="/api/light/0/off"
+      handle-as="json"
+      debounce-duration="300"></iron-ajax>
+
+      <paper-card heading="Webcam">
+        <paper-button raised on-click="light0On">Licht an</paper-button>
+        <paper-button raised on-click="light0Off">Licht aus</paper-button>
+      </paper-card>
 
   </template>
   <script>
     Polymer({
       is: 'page-webcam',
 
-      handleResponse: function(evt) {
+      light0On: function() {
+        this.$.light0On.generateRequest();
+      },
+
+      light0Off: function() {
+        this.$.light0Off.generateRequest();
       }
     });
   </script>
