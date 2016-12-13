@@ -9,6 +9,7 @@ var express = require('express'),
     fs = require('fs'),
     http = require('http'),
     https = require('https'),
+    proxy = require('http-proxy-middleware'),
     config = require('./config.json'),
     app = express(),
     MongoClient = require('mongodb').MongoClient,
@@ -136,6 +137,12 @@ app.get(['/', '/index.html'], function(req, res) {
     return res.sendFile(path.resolve('../index.html'));
   }
 });
+
+app.use('/camera', requireLogin);
+app.use('/camera', proxy({
+  target: 'http://127.0.0.1:8000',
+  ws: true
+}));
 
 app.use(express.static(path.resolve('../')));
 
