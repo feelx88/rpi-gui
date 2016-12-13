@@ -6,10 +6,15 @@ var express = require('express'),
     cookieSession = require('cookie-session'),
     LocalStrategy = require('passport-local').Strategy,
     exec = require('child_process').exec,
+    fs = require('fs'),
+    http = require('http'),
+    https = require('https'),
     config = require('./config.json'),
     app = express(),
     MongoClient = require('mongodb').MongoClient,
-    url = 'mongodb://localhost:27017/home';
+    url = 'mongodb://localhost:27017/home',
+    privateKey = fs.readFileSync(config.privateKey, 'utf8'),
+    certificate = fs.readFileSync(config.certificate, 'utf8');
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -139,8 +144,18 @@ app.use(function(req, res) {
   res.sendFile(path.resolve('../index.html'));
 });
 
-app.listen(8008, function () {
+let httpsServer = https.createServer({
+      key: privateKey,
+      cert: certificate
+    }, app);
+
+httpsServer.listen(8009, function() {
   exec('sudo gpio mode 5 output');
   exec('sudo gpio write 5 0');
-  console.log('Listening on port 8008');
+  console.log('Listening on port 8009');
 });
+
+http.createServer(function (req, res) {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+}).listen(8008);
