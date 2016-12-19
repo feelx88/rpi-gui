@@ -11,6 +11,8 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/platinum-sw/platinum-sw-register.html">
+<link rel="import" href="../../bower_components/platinum-sw/platinum-sw-cache.html">
 <link rel="import" href="view-login.html">
 <link rel="import" href="view-main.html">
 
@@ -21,6 +23,10 @@
     }
   </style>
   <template>
+    <platinum-sw-register auto-register>
+      <platinum-sw-cache defaultCacheStrategy="fastest"></platinum-sw-cache>
+    </platinum-sw-register>
+
     <app-location route="{{route}}"></app-location>
 
     <app-route
