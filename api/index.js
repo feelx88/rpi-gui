@@ -130,6 +130,9 @@ app.get('/api/light/0/off', requireLogin, function(req, res) {
   res.send({success: true});
 });
 
+app.use('/api/camera', requireLogin);
+app.use('/api/camera', proxy('ws://127.0.0.1:8000'));
+
 app.get(['/', '/index.html'], function(req, res) {
   if(!req.isAuthenticated()) {
     return res.redirect('/login');
@@ -137,12 +140,6 @@ app.get(['/', '/index.html'], function(req, res) {
     return res.sendFile(path.resolve('../index.html'));
   }
 });
-
-app.use('/camera', requireLogin);
-app.use('/camera', proxy({
-  target: 'http://127.0.0.1:8000',
-  ws: true
-}));
 
 app.use(express.static(path.resolve('../')));
 

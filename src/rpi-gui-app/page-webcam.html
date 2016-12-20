@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/google-chart/google-chart.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-icons/av-icons.html">
 
 <dom-module id="page-webcam">
   <template>
@@ -13,6 +14,16 @@
       }
       paper-card {
         width: 100%
+      }
+
+      .camera {
+        transform: rotate(180deg);
+        height: 70vh;
+        max-width: 100%;
+      }
+
+      img {
+        transition: all .5s;
       }
     </style>
 
@@ -29,8 +40,15 @@
       debounce-duration="300"></iron-ajax>
 
       <paper-card heading="Webcam">
-        <paper-button raised on-click="light0On">Licht an</paper-button>
-        <paper-button raised on-click="light0Off">Licht aus</paper-button>
+        <div class="layout horizontal center-justified">
+          <paper-button raised on-click="light0On">Licht an</paper-button>
+          <paper-button raised on-click="light0Off">Licht aus</paper-button>
+          <paper-button raised on-click="play"><iron-icon icon="av:play-arrow"></iron-icon></paper-button>
+          <paper-button raised on-click="stop"><iron-icon icon="av:stop"></iron-icon></paper-button>
+        </div>
+        <div class="layout horizontal center-justified">
+          <img id="video" src="/disconnected.png" class$="{{videoClass}}"></img>
+        </div>
       </paper-card>
 
   </template>
@@ -38,12 +56,43 @@
     Polymer({
       is: 'page-webcam',
 
+      properties: {
+        socket: Object,
+        videoClass: {
+          type: String,
+          default: ''
+        }
+      },
+
       light0On: function() {
         this.$.light0On.generateRequest();
       },
 
       light0Off: function() {
         this.$.light0Off.generateRequest();
+      },
+
+      play: function() {
+        var me = this;
+        this.socket = new WebSocket("wss://" + window.location.hostname + "/api/camera/websocket");
+
+        // Request the video stream once connected
+        this.socket.onopen = function () {
+            me.socket.send("read_camera");
+        };
+
+        // Currently, all returned messages are video data. However, this is
+        // extensible with full-spec JSON-RPC.
+        this.socket.onmessage = function (messageEvent) {
+            me.videoClass = "camera";
+            me.$.video.src = "data:image/jpeg;base64," + messageEvent.data;
+        };
+      },
+
+      stop: function() {
+        this.socket.close();
+        this.$.video.src = "/disconnected.png";
+        this.videoClass = "";
       }
     });
   </script>
