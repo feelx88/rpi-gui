@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-icons/av-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/device-icons.html">
 
 <dom-module id="page-webcam">
   <template>
@@ -41,10 +42,10 @@
 
       <paper-card heading="Webcam">
         <div class="layout horizontal center-justified">
-          <paper-button raised on-click="light0On">Licht an</paper-button>
-          <paper-button raised on-click="light0Off">Licht aus</paper-button>
-          <paper-button raised on-click="play"><iron-icon icon="av:play-arrow"></iron-icon></paper-button>
-          <paper-button raised on-click="stop"><iron-icon icon="av:stop"></iron-icon></paper-button>
+          <paper-button raised on-click="light0On"><iron-icon icon="device:brightness-high"></iron-icon></paper-button>
+          <paper-button raised on-click="light0Off"><iron-icon icon="device:brightness-low"></iron-icon></paper-button>
+          <paper-button raised on-click="play"><iron-icon icon="av:videocam"></iron-icon></paper-button>
+          <paper-button raised on-click="stop"><iron-icon icon="av:videocam-off"></iron-icon></paper-button>
         </div>
         <div class="layout horizontal center-justified">
           <img id="video" src="/disconnected.png" class$="{{videoClass}}"></img>
