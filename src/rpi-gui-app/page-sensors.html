@@ -3,6 +3,7 @@
 <link rel="import" href="../../bower_components/google-chart/google-chart.html">
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
 
 <dom-module id="page-sensors">
   <template>
@@ -16,11 +17,9 @@
       google-chart {
         width: 100%;
       }
-      .flex-center-justified {
-        @apply(--layout-horizontal);
-        @apply(--layout-center-justified);
-        @apply(--layout-center);
-        margin-bottom: 1em;
+      paper-card paper-card {
+        margin: 1em;
+        padding: 1em;
       }
     </style>
 
@@ -34,20 +33,28 @@
       debounce-duration="300"></iron-ajax>
 
     <paper-card heading="Sensoren">
-      <div class="flex-center-justified">
-        <paper-button  raised on-click="refresh">Aktualisieren</paper-button>
+      <div class="layout horizontal center-justified">
+        <paper-button raised on-click="refresh">Aktualisieren</paper-button>
         <paper-spinner id="spinner"></paper-spinner>
+      </div>
+      <div class="layout horizontal wrap">
+        <paper-card heading="Aktuelle Temperatur" class="flex">
+          <h1>{{lastTemp}} °C</h1>
+        </paper-card>
+        <paper-card heading="Aktuelle Luftfeuchtigkeit" class="flex">
+          <h1>{{lastHumid}} %RH</h1>
+        </paper-card>
       </div>
       <google-chart
         id='chartTemp'
         type='line'
-        options='{"title": "Temperatur", "pointSize": 2, "explorer": {}}'
+        options='{"title": "Temperaturverlauf", "pointSize": 2, "explorer": {}}'
         cols='[{"label":"Zeitpunkt", "type":"datetime"}, {"label":"°C", "type":"number"}]'>
       </google-chart>
       <google-chart
         id='chartHumid'
         type='line'
-        options='{"title": "Luftfeuchtigkeit", "pointSize": 2, "explorer": {}}'
+        options='{"title": "Luftfeuchtigkeitsverlauf", "pointSize": 2, "explorer": {}}'
         cols='[{"label":"Zeitpunkt", "type":"datetime"}, {"label":"%RH", "type":"number"}]'>
       </google-chart>
     </paper-card>
@@ -62,7 +69,9 @@
           type: Boolean,
           value: false,
           observer: 'activated'
-        }
+        },
+        lastTemp: Object,
+        lastHumid: Object
       },
 
       behaviors: [
@@ -100,6 +109,9 @@
 
         this.$.chartTemp.rows = tempData;
         this.$.chartHumid.rows = humidData;
+
+        this.lastTemp = Math.round(tempData[0][1] * 100) / 100;
+        this.lastHumid = Math.round(humidData[0][1] * 100) / 100;
 
         this.$.spinner.active = false;
       },
