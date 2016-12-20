@@ -143,11 +143,6 @@ app.get(['/', '/index.html'], function(req, res) {
 
 app.use(express.static(path.resolve('../')));
 
-// catchall
-app.use(function(req, res) {
-  res.sendFile(path.resolve('../index.html'));
-});
-
 let httpsServer = https.createServer({
       key: privateKey,
       cert: certificate
