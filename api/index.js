@@ -10,6 +10,11 @@ var express = require('express'),
     http = require('http'),
     https = require('https'),
     proxy = require('http-proxy-middleware'),
+    mpd = require('mpd'),
+    mpdClient = mpd.connect({
+      port: 6600,
+      host: 'localhost'
+    }),
     config = require('./config.json'),
     app = express(),
     MongoClient = require('mongodb').MongoClient,
@@ -111,13 +116,28 @@ app.put('/api/weight/:weight', requireLogin, function(req, res) {
 });
 
 app.get('/api/media/play', requireLogin, function(req, res) {
-  exec('mpc play');
+  mpdClient.sendCommand("play");
   res.send({success: true});
 });
 
 app.get('/api/media/stop', requireLogin, function(req, res) {
-  exec('mpc stop');
+  mpdClient.sendCommand("stop");
   res.send({success: true});
+});
+
+app.get('/api/media/status', requireLogin, function(req, res) {
+  mpdClient.sendCommand("status", function(err, msg) {
+    data = ('{ "' + msg.trim().replace(/\n/g, '", "') + '" }').replace(/: /g, '": "');
+    data = JSON.parse(data);
+
+    mpdClient.sendCommand("currentsong", function(err, msg) {
+      data.currentSong = msg.replace(/.*\nName: /, ''). replace(/\n.*/g, '');
+      res.send({
+        success: true,
+        data: data
+      });
+    });
+  });
 });
 
 app.get('/api/light/0/on', requireLogin, function(req, res) {
