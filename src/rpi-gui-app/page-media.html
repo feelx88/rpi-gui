@@ -22,14 +22,26 @@
       id="play"
       url="/api/media/play"
       handle-as="json"
+      on-response="onCommand"
       debounce-duration="300"></iron-ajax>
     <iron-ajax
       id="pause"
       url="/api/media/stop"
       handle-as="json"
+      on-response="onCommand"
+      debounce-duration="300"></iron-ajax>
+
+    <iron-ajax
+      id="status"
+      url="/api/media/status"
+      handle-as="json"
+      on-response="onStatus"
       debounce-duration="300"></iron-ajax>
 
     <paper-card heading="Media">
+      <div class="layout horizontal center-justified">
+        <h1><iron-icon icon="{{stateIcon(playing)}}"></iron-icon> {{song}}</h1>
+      </div>
       <div class="layout horizontal center-justified">
         <paper-button raised on-click="play"><iron-icon icon="av:play-arrow"></iron-icon></paper-button>
         <paper-button raised on-click="pause"><iron-icon icon="av:stop"></iron-icon></paper-button>
@@ -41,12 +53,41 @@
     Polymer({
       is: 'page-media',
 
+      properties: {
+        active: {
+          type: Boolean,
+          value: false,
+          observer: 'activated'
+        },
+        song: String,
+        playing: Boolean
+      },
+
       play: function() {
         this.$.play.generateRequest();
       },
 
       pause: function() {
         this.$.pause.generateRequest();
+      },
+
+      onCommand: function() {
+        this.$.status.generateRequest();
+      },
+
+      onStatus: function(evt) {
+        this.song = evt.detail.response.data.currentSong;
+        this.playing = evt.detail.response.data.state === 'play';
+      },
+
+      stateIcon: function() {
+        return this.playing ? 'av:play-arrow' : 'av:stop';
+      },
+
+      activated: function(value) {
+        if(value) {
+          this.$.status.generateRequest();
+        }
       }
     });
   </script>
