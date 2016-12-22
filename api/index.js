@@ -140,6 +140,14 @@ app.get('/api/media/status', requireLogin, function(req, res) {
   });
 });
 
+app.get('/api/light/0', requireLogin, function(req, res) {
+  exec('sudo gpio read 5', function(err, stdout, stderr) {
+    res.send({
+      status: (stdout.trim() === '1' ? true : false)
+    });
+  });
+});
+
 app.get('/api/light/0/on', requireLogin, function(req, res) {
   exec('sudo gpio write 5 1');
   res.send({success: true});
