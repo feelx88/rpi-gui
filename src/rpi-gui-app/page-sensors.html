@@ -71,7 +71,8 @@
           observer: 'activated'
         },
         lastTemp: Object,
-        lastHumid: Object
+        lastHumid: Object,
+        statusInterval: Object
       },
 
       behaviors: [
@@ -122,7 +123,14 @@
 
       activated: function(value) {
         if(value) {
-          this.$.req.generateRequest();
+          var me = this;
+          me.$.req.generateRequest();
+
+          this.statusInterval = setInterval(function() {
+            me.$.req.generateRequest();
+          }, 60000);
+        } else {
+          clearInterval(this.statusInterval);
         }
       }
     });

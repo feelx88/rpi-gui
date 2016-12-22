@@ -60,7 +60,8 @@
           observer: 'activated'
         },
         song: String,
-        playing: Boolean
+        playing: Boolean,
+        statusInterval: Object
       },
 
       play: function() {
@@ -86,7 +87,14 @@
 
       activated: function(value) {
         if(value) {
-          this.$.status.generateRequest();
+          var me = this;
+          me.$.status.generateRequest();
+
+          this.statusInterval = setInterval(function() {
+            me.$.status.generateRequest();
+          }, 5000);
+        } else {
+          clearInterval(this.statusInterval);
         }
       }
     });
