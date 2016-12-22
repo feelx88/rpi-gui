@@ -6,6 +6,7 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/device-icons.html">
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
 
 <dom-module id="page-webcam">
   <template>
@@ -42,10 +43,8 @@
 
       <paper-card heading="Webcam">
         <div class="layout horizontal center-justified">
-          <paper-button raised on-click="light0On"><iron-icon icon="device:brightness-high"></iron-icon></paper-button>
-          <paper-button raised on-click="light0Off"><iron-icon icon="device:brightness-low"></iron-icon></paper-button>
-          <paper-button raised on-click="play"><iron-icon icon="av:videocam"></iron-icon></paper-button>
-          <paper-button raised on-click="stop"><iron-icon icon="av:videocam-off"></iron-icon></paper-button>
+          <paper-toggle-button on-change="toggleLight0"><iron-icon icon="device:brightness-high"></iron-icon></paper-toggle-button>
+          <paper-toggle-button on-change="toggleVideo"><iron-icon icon="av:videocam"></iron-icon></paper-toggle-button>
         </div>
         <div class="layout horizontal center-justified">
           <img id="video" src="/disconnected.png" class$="{{videoClass}}"></img>
@@ -65,35 +64,35 @@
         }
       },
 
-      light0On: function() {
-        this.$.light0On.generateRequest();
+      toggleLight0: function(evt) {
+        if(evt.target.checked) {
+          this.$.light0On.generateRequest();
+        } else {
+          this.$.light0Off.generateRequest();
+        }
       },
 
-      light0Off: function() {
-        this.$.light0Off.generateRequest();
-      },
+      toggleVideo: function(evt) {
+        if(evt.target.checked) {
+          var me = this;
+          this.socket = new WebSocket("wss://" + window.location.hostname + "/api/camera/websocket");
 
-      play: function() {
-        var me = this;
-        this.socket = new WebSocket("wss://" + window.location.hostname + "/api/camera/websocket");
+          // Request the video stream once connected
+          this.socket.onopen = function () {
+              me.socket.send("read_camera");
+          };
 
-        // Request the video stream once connected
-        this.socket.onopen = function () {
-            me.socket.send("read_camera");
-        };
-
-        // Currently, all returned messages are video data. However, this is
-        // extensible with full-spec JSON-RPC.
-        this.socket.onmessage = function (messageEvent) {
-            me.videoClass = "camera";
-            me.$.video.src = "data:image/jpeg;base64," + messageEvent.data;
-        };
-      },
-
-      stop: function() {
-        this.socket.close();
-        this.$.video.src = "/disconnected.png";
-        this.videoClass = "";
+          // Currently, all returned messages are video data. However, this is
+          // extensible with full-spec JSON-RPC.
+          this.socket.onmessage = function (messageEvent) {
+              me.videoClass = "camera";
+              me.$.video.src = "data:image/jpeg;base64," + messageEvent.data;
+          };
+        } else {
+          this.socket.close();
+          this.$.video.src = "/disconnected.png";
+          this.videoClass = "";
+        }
       }
     });
   </script>
