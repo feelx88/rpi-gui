@@ -30,6 +30,18 @@
       handle-as="json"
       on-response="onCommand"
       debounce-duration="300"></iron-ajax>
+    <iron-ajax
+      id="prev"
+      url="/api/media/prev"
+      handle-as="json"
+      on-response="onCommand"
+      debounce-duration="300"></iron-ajax>
+    <iron-ajax
+      id="next"
+      url="/api/media/next"
+      handle-as="json"
+      on-response="onCommand"
+      debounce-duration="300"></iron-ajax>
 
     <iron-ajax
       id="status"
@@ -43,8 +55,10 @@
         <h1><iron-icon icon="{{stateIcon(playing)}}"></iron-icon> {{song}}</h1>
       </div>
       <div class="layout horizontal center-justified">
+        <paper-button raised on-click="prev"><iron-icon icon="av:skip-previous"></iron-icon></paper-button>
         <paper-button raised on-click="play"><iron-icon icon="av:play-arrow"></iron-icon></paper-button>
         <paper-button raised on-click="pause"><iron-icon icon="av:stop"></iron-icon></paper-button>
+        <paper-button raised on-click="next"><iron-icon icon="av:skip-next"></iron-icon></paper-button>
       </div>
     </paper-card>
 
@@ -70,6 +84,14 @@
 
       pause: function() {
         this.$.pause.generateRequest();
+      },
+
+      prev: function() {
+        this.$.prev.generateRequest();
+      },
+
+      next: function() {
+        this.$.next.generateRequest();
       },
 
       onCommand: function() {

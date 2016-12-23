@@ -115,16 +115,6 @@ app.put('/api/weight/:weight', requireLogin, function(req, res) {
   });
 });
 
-app.get('/api/media/play', requireLogin, function(req, res) {
-  mpdClient.sendCommand("play");
-  res.send({success: true});
-});
-
-app.get('/api/media/stop', requireLogin, function(req, res) {
-  mpdClient.sendCommand("stop");
-  res.send({success: true});
-});
-
 app.get('/api/media/status', requireLogin, function(req, res) {
   mpdClient.sendCommand("status", function(err, msg) {
     data = ('{ "' + msg.trim().replace(/\n/g, '", "') + '" }').replace(/: /g, '": "');
@@ -138,6 +128,11 @@ app.get('/api/media/status', requireLogin, function(req, res) {
       });
     });
   });
+});
+
+app.get('/api/media/:cmd', requireLogin, function(req, res) {
+  mpdClient.sendCommand(req.params.cmd);
+  res.send({success: true});
 });
 
 app.get('/api/light/0', requireLogin, function(req, res) {
