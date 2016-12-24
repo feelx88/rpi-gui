@@ -11,16 +11,24 @@ var express = require('express'),
     https = require('https'),
     proxy = require('http-proxy-middleware'),
     mpd = require('mpd'),
-    mpdClient = mpd.connect({
-      port: 6600,
-      host: 'localhost'
-    }),
+    mpdClient = mpdConnect(),
     config = require('./config.json'),
     app = express(),
     MongoClient = require('mongodb').MongoClient,
     url = 'mongodb://localhost:27017/home',
     privateKey = fs.readFileSync(config.privateKey, 'utf8'),
     certificate = fs.readFileSync(config.certificate, 'utf8');
+
+function mpdConnect() {
+  var client = mpd.connect({
+    port: 6600,
+    host: 'localhost'
+  });
+  client.on('error', function() {
+    mpdClient = mpdConnect();
+  });
+  return client;
+}
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
