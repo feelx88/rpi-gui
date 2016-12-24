@@ -164,6 +164,10 @@ app.get(['/', '/index.html'], function(req, res) {
   }
 });
 
+app.get(['/login'], function(req, res) {
+  return res.sendFile(path.resolve('../index.html'));
+});
+
 app.use(express.static(path.resolve('../')));
 
 let httpsServer = https.createServer({
