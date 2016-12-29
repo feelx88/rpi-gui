@@ -11,6 +11,7 @@ var express = require('express'),
     https = require('https'),
     proxy = require('http-proxy-middleware'),
     mpd = require('mpd'),
+    expressWs = require('express-ws'),
     mpdClient = mpdConnect(),
     config = require('./config.json'),
     app = express(),
@@ -161,9 +162,6 @@ app.get('/api/light/0/off', requireLogin, function(req, res) {
   res.send({success: true});
 });
 
-app.use('/api/camera', requireLogin);
-app.use('/api/camera', proxy('ws://127.0.0.1:8000'));
-
 app.get(['/', '/index.html'], function(req, res) {
   if(!req.isAuthenticated()) {
     return res.redirect('/login');
@@ -182,6 +180,33 @@ let httpsServer = https.createServer({
       key: privateKey,
       cert: certificate
     }, app);
+
+expressWs(app, httpsServer);
+app.ws('/api/camera/websocket', function(ws, req) {
+  var interval = undefined;
+
+  ws.on('message', function(msg) {
+    interval = setInterval(function() {
+      exec('raspistill -n -t 1 -w 320 -h 240 -rot 180 -o -', {
+        maxBuffer: 1024 * 1024 * 10,
+        encoding: 'binary'
+      }, function(err, stdout) {
+        if(err) {
+          return;
+        }
+        var buffer = new Buffer(stdout, 'binary');
+        ws.send(buffer.toString('base64'));
+      });
+    }, 1000 / 15);
+  });
+
+  ws.on('error', function() {
+    clearInterval(interval);
+  });
+  ws.on('close', function() {
+    clearInterval(interval);
+  });
+});
 
 httpsServer.listen(8009, function() {
   exec('sudo gpio mode 5 output');
