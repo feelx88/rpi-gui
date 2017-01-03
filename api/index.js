@@ -130,7 +130,12 @@ app.get('/api/media/status', requireLogin, function(req, res) {
     data = JSON.parse(data);
 
     mpdClient.sendCommand("currentsong", function(err, msg) {
-      data.currentSong = msg.replace(/.*\nName: /, ''). replace(/\n.*/g, '');
+      // msg has the following format:
+      // file: xyz\nName: xyz\notherinfo: info
+      data.currentSong = msg
+        .replace(/\n/g, '#;#') // replace newlines for better replacing
+        .replace(/.*Name: /, '') // replace everything before the name
+        .replace(/#;#.*/, ''); // replace everything after the first replaced newline
       res.send({
         success: true,
         data: data
