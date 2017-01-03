@@ -179,6 +179,18 @@ app.get(['/login'], function(req, res) {
   return res.sendFile(path.resolve('../index.html'));
 });
 
+// Prevent api folder access
+app.get([
+    '/api/index.js',
+    '/api/config.json.tpl',
+    '/api/config.json',
+    '/api/package.json'
+  ],
+  function(req, res) {
+    return res.status(403).end();
+  }
+);
+
 app.use(express.static(path.resolve('../')));
 
 let httpsServer = https.createServer({
