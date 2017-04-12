@@ -5,6 +5,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     cookieSession = require('cookie-session'),
     LocalStrategy = require('passport-local').Strategy,
+    BasicStrategy = require('passport-http').BasicStrategy,
     exec = require('child_process').exec,
     fs = require('fs'),
     http = require('http'),
@@ -51,6 +52,18 @@ passport.use(new LocalStrategy(function(username, password, done) {
   }
 }));
 
+passport.use(new BasicStrategy(function(username, password, done) {
+  if(username === config.username && password === config.password) {
+    console.log("logged in!");
+    return done(null, {
+      id: 1,
+      username: username
+    });
+  } else {
+    return done(null, false);
+  }
+}));
+
 app.use(cookieParser());
 app.use(bodyParser());
 app.use(cookieSession({
@@ -59,13 +72,21 @@ app.use(cookieSession({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use((req, res, next) => {
+  if(!req.isAuthenticated()) {
+     passport.authenticate('basic', { session: false });
+  }
+  next();
+});
 
 function requireLogin(req, res, next) {
   if(!req.isAuthenticated()) {
-    return res.redirect(401, '/login');
-  } else {
-    return next();
+    passport.authenticate('basic', {
+      session: false,
+      failureRedirect: '/login'
+    });
   }
+  return next();
 }
 
 app.post('/login', passport.authenticate('local', {
