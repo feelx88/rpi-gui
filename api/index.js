@@ -192,12 +192,12 @@ app.get(['/', '/index.html'], function(req, res) {
   if(!req.isAuthenticated()) {
     return res.redirect('/login');
   } else {
-    return res.sendFile(path.resolve('../index.html'));
+    return res.sendFile(path.resolve('../build/default/index.html'));
   }
 });
 
 app.get(['/login'], function(req, res) {
-  return res.sendFile(path.resolve('../index.html'));
+  return res.sendFile(path.resolve('../build/default/index.html'));
 });
 
 // Prevent api folder access
@@ -212,7 +212,7 @@ app.get([
   }
 );
 
-app.use(express.static(path.resolve('../')));
+app.use(express.static(path.resolve('../build/default')));
 
 let httpsServer = https.createServer({
       key: privateKey,
