@@ -117,10 +117,10 @@ app.get('/api/temperatures', requireLogin, function (req, res) {
   });
 });
 
-app.get('/api/weight', requireLogin, function (req, res) {
+app.get('/api/weight/:collection', requireLogin, function (req, res) {
   // Use connect method to connect to the server
   MongoClient.connect(url, function(err, db) {
-    let weight = db.collection('weight');
+    let weight = db.collection(req.params.collection);
     weight.find().sort({_id: -1}).limit(60).toArray(function(err, docs) {
       res.send(docs);
       db.close();
@@ -128,10 +128,10 @@ app.get('/api/weight', requireLogin, function (req, res) {
   });
 });
 
-app.put('/api/weight/:weight', requireLogin, function(req, res) {
+app.put('/api/weight/:collection/:weight', requireLogin, function(req, res) {
   // Use connect method to connect to the server
   MongoClient.connect(url, function(err, db) {
-    let weight = db.collection('weight');
+    let weight = db.collection(req.params.collection);
 
     weight.insertOne({
       timestamp: new Date(),

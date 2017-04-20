@@ -4,6 +4,8 @@
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 
 <dom-module id="page-weight">
@@ -28,7 +30,7 @@
 
     <iron-ajax
       id="req"
-      url="/api/weight"
+      url="/api/weight/{{collection}}"
       handle-as="json"
       on-request="handleRequest"
       on-response="handleResponse"
@@ -37,7 +39,7 @@
 
     <iron-ajax
       id="entry"
-      url="/api/weight/{{weight}}"
+      url="/api/weight/{{collection}}/{{weight}}"
       method="PUT"
       handle-as="json"
       on-response="refresh"
@@ -45,6 +47,11 @@
 
     <paper-card heading="Gewicht" id="container">
       <div class="flex-center-justified">
+        <paper-listbox selected="{{collection}}" attr-for-selected="value" fallback-selection="cookie" on-iron-select="refresh">
+          <paper-item value="cookie">Cookie</paper-item>
+          <paper-item value="loki">Loki</paper-item>
+          <paper-item value="freya">Freya</paper-item>
+        </paper-listbox>
         <paper-input id="input" label="Gewicht" prevent-invalid-input allowed-pattern="[0-9.]" auto-validate pattern="[0-9]+(\.[0-9]+)*" value={{weight}}></paper-input>
         <paper-button raised on-click="entry">Eintragen</paper-button>
       </div>
@@ -77,6 +84,9 @@
         weight: {
           type: Number,
           default: 50
+        },
+        collection: {
+          type: String
         },
         active: {
           type: Boolean,
