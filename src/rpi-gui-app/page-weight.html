@@ -121,6 +121,7 @@
       entry: function() {
         if(this.weight > 0 && !this.$.input.invalid) {
           this.$.entry.generateRequest();
+          this.$.input.value = '';
         }
       },
 
