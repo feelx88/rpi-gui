@@ -8,6 +8,10 @@ import smbus
 import time
 import pymongo
 import datetime
+import math
+
+def roundToPointFive(number):
+    return round(number * 2) / 2
 
 # Get I2C bus
 bus = smbus.SMBus(1)
@@ -41,6 +45,9 @@ data1 = bus.read_byte(0x40)
 
 # Convert the data
 cTemp = ((data0 * 256 + data1) * 175.72 / 65536.0) - 46.85
+
+cTemp = roundToPointFive(cTemp)
+humidity = roundToPointFive(humidity)
 
 # Write data to mongodb
 client = pymongo.MongoClient()
