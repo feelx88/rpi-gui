@@ -3,3 +3,4 @@ bower_components/
 api/node_modules/
 .remote-sync.json
 api/config.json
+.vscode
