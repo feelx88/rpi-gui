@@ -188,6 +188,24 @@ app.get('/api/light/0/off', requireLogin, function(req, res) {
   res.send({success: true});
 });
 
+app.get('/api/light/1', requireLogin, function(req, res) {
+  http.get('http://192.168.0.48/cm?cmnd=Power', (data) => {
+    res.send({
+      status: (data.POWER === 'ON' ? true : false)
+    });
+  });
+});
+
+app.get('/api/light/1/on', requireLogin, function(req, res) {
+  http.get('http://192.168.0.48/cm?cmnd=Power%20On');
+  res.send({success: true});
+});
+
+app.get('/api/light/1/off', requireLogin, function(req, res) {
+  http.get('http://192.168.0.48/cm?cmnd=Power%20Off');
+  res.send({success: true});
+});
+
 app.get(['/', '/index.html'], function(req, res) {
   if(!req.isAuthenticated()) {
     return res.redirect('/login');
