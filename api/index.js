@@ -10,6 +10,7 @@ var express = require('express'),
     fs = require('fs'),
     http = require('http'),
     https = require('https'),
+    request = require('request'),
     proxy = require('http-proxy-middleware'),
     mpd = require('mpd'),
     expressWs = require('express-ws'),
@@ -189,7 +190,8 @@ app.get('/api/light/0/off', requireLogin, function(req, res) {
 });
 
 app.get('/api/light/1', requireLogin, function(req, res) {
-  http.get('http://192.168.0.48/cm?cmnd=Power', (data) => {
+  request('http://192.168.0.48/cm?cmnd=Power', (error, response, data) => {
+    data = JSON.parse(data);
     res.send({
       status: (data.POWER === 'ON' ? true : false)
     });
